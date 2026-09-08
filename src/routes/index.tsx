@@ -1,24 +1,65 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+import { site } from "@/config/site";
+import { Header } from "@/components/Header";
+import { HeroSection } from "@/components/HeroSection";
+import { ProblemSection } from "@/components/ProblemSection";
+import { ServiceCards } from "@/components/ServiceCards";
+import { TrustSection } from "@/components/TrustSection";
+import { ProcessSection } from "@/components/ProcessSection";
+import { UseCaseSection } from "@/components/UseCaseSection";
+import { FAQSection } from "@/components/FAQSection";
+import { CTASection } from "@/components/CTASection";
+import { ContactSection } from "@/components/ContactSection";
+import { Footer } from "@/components/Footer";
+
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: site.seo.title },
+      { name: "description", content: site.seo.description },
+      { property: "og:title", content: site.seo.title },
+      { property: "og:description", content: site.seo.description },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "/" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          name: site.businessName,
+          description: site.seo.description,
+          telephone: site.phone,
+          email: site.email,
+          address: { "@type": "PostalAddress", streetAddress: site.address },
+          openingHours: site.businessHours,
+        }),
+      },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="min-h-screen bg-background scroll-smooth">
+      <Header />
+      <main>
+        <HeroSection />
+        <ProblemSection />
+        <ServiceCards />
+        <TrustSection />
+        <ProcessSection />
+        <UseCaseSection />
+        <FAQSection />
+        <CTASection />
+        <ContactSection />
+      </main>
+      <Footer />
     </div>
   );
 }
